@@ -7,11 +7,14 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 require_once 'vendor/autoload.php';
 $env = parse_ini_file('.env');
 
+$y = date('Y');
+$m = date('m') - 1;
+
 $spreadsheet = new Spreadsheet();
 $activeWorksheet = $spreadsheet->getActiveSheet();
 
 $data = [
-    ['Reiskosten declaratie sheet ' . date('m-Y')],
+    ["Reiskosten declaratie sheet $m-$y"],
     ['Naam:', $env['PERSON_NAME']],
     '',
     '',
@@ -20,9 +23,6 @@ $data = [
 ];
 
 $dates = [];
-
-$y = date('Y');
-$m = date('m');
 
 $totalDays = cal_days_in_month(CAL_GREGORIAN, $m, $y) + 1;
 $excludes = explode(',', $env['EXCLUDES']);
@@ -80,7 +80,8 @@ $activeWorksheet->getCell('E33')->setValue('=SUM(E7:E32)');
 $writer = new Xlsx($spreadsheet);
 
 $filename = [
-    date('Y-m'),
+    $y,
+    $m,
     $env['FILENAME'],
     $env['PERSON_NAME'],
 ];
