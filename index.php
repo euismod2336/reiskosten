@@ -8,7 +8,7 @@ require_once 'vendor/autoload.php';
 $env = parse_ini_file('.env');
 
 $y = date('Y');
-$m = date('m') - 1;
+$m = str_pad(date('m') - 1, 2, '0', STR_PAD_LEFT);
 
 $spreadsheet = new Spreadsheet();
 $activeWorksheet = $spreadsheet->getActiveSheet();
