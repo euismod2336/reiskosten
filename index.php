@@ -10,6 +10,11 @@ $env = parse_ini_file('.env');
 $y = date('Y');
 $m = str_pad(date('m') - 1, 2, '0', STR_PAD_LEFT);
 
+if ($m === '00') {
+    $y--;
+    $m = '12';
+}
+
 $spreadsheet = new Spreadsheet();
 $activeWorksheet = $spreadsheet->getActiveSheet();
 
@@ -79,14 +84,15 @@ $activeWorksheet->getCell('E33')->setValue('=SUM(E7:E32)');
 
 $writer = new Xlsx($spreadsheet);
 
-$filename = [
-    $y,
-    $m,
-    $env['FILENAME'],
-    $env['PERSON_NAME'],
-];
+$filename = __DIR__ . '/export/' . implode('-', [
+        $y,
+        $m,
+        $env['FILENAME'],
+        $env['PERSON_NAME'],
+    ]) . '.xlsx';
 
-$writer->save(__DIR__ . '/export/' . implode('-', $filename) . '.xlsx');
+$writer->save($filename);
+chmod($filename, 0777);
 
 echo "\r\n";
 echo 'Thank you for using DOS';
